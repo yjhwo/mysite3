@@ -50,8 +50,11 @@ public class GuestBookDAO {
 	public Long insert(GuestBookVO vo) {
 		int count = sqlSession.insert("guestbook.insert", vo);
 		
+		if(count==0){
+			return 0L;
+		}
 		System.out.println(count+":"+vo.getNo());		// primary키가 아닌 그냥 개수
-		// return 0L;
+		
 		return vo.getNo();
 	}
 
