@@ -2,4 +2,87 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="board">
+	<select id="getTotalCount" resultType="int">
+		<![CDATA[
+			SELECT count(*) FROM board
+		]]>
+	</select>
+
+	<select id="getTotalCount2" parameterType="String" resultType="int">
+		<![CDATA[
+			SELECT count(*) FROM board 
+			WHERE title LIKE #{kwd} OR content LIKE #{kwd}
+		]]>
+	</select>
+
+	<update id="updateGroupOrder" parameterType="boardvo">
+		<![CDATA[
+			UPDATE board SET order_no = order_no + 1 
+			WHERE group_no = #{group_no} AND order_no >= #{order_no}
+		]]>
+	</update>
+
+	<select id="search" parameterType="map" resultType="boardvo">
+		<![CDATA[
+			SELECT b.no, b.title, b.content, u.no as user_no, u.name, b.viewCount, DATE_FORMAT(b.reg_date,'%Y-%m-%d %h:%i:%s') as reg_date 
+				FROM board b, user u WHERE b.user_no = u.no AND (b.title LIKE #{kwd} OR b.content LIKE #{kwd}) 
+				ORDER BY b.group_no DESC, b.order_no ASC 
+				limit #{page}, 5
+		]]>
+	</select>
+
+	<update id="modify" parameterType="boardvo">
+		<![CDATA[
+			UPDATE board SET title = #{title}, content=#{content} WHERE no=#{no}
+		]]>
+	</update>
+
+	<update id="updateCount" parameterType="long">
+		<![CDATA[
+			UPDATE board SET viewCount = viewCount+1 WHERE no=#{no}
+		]]>
+	</update>
+
+	<delete id="delete" parameterType="int">
+		DELETE FROM board WHERE no=#{no}
+	</delete>
+
+	<insert id="insert" parameterType="boardvo">	
+	
+		<if test="group_no == null">
+			<![CDATA[
+				INSERT INTO board VALUES(null,#{title},#{content},now(),0, 
+				(SELECT ifnull(max(group_no),0)+1 FROM board as b),1,0,#{user_no})
+			]]>
+		</if>
+		
+		<if test="group_no != null">
+			<![CDATA[
+				insert into board values(null,#{title},#{content},now(),0,#{group_no},#{order_no},#{depth},#{user_no})
+			]]>
+		</if>
+		
+	</insert>
+
+	<select id="getReplyInform" parameterType="long" resultType="boardvo">
+		<![CDATA[
+			SELECT group_no, order_no, depth FROM board WHERE no = #{no}
+		]]>
+	</select>
+	
+	<select id="getNo" parameterType="long" resultType="boardvo">
+		<![CDATA[
+			SELECT title, content FROM board WHERE no = #{no}
+		]]>
+	</select>
+	
+	<select id="getList" parameterType="int" resultType="boardvo">	
+		<![CDATA[
+			SELECT b.no, b.title, b.content, u.no as user_no, u.name, b.viewCount, DATE_FORMAT(b.reg_date,'%Y-%m-%d %h:%i:%s') as reg_date,  
+					b.group_no, b.order_no, b.depth 
+					FROM board b, user u where b.user_no = u.no ORDER BY b.group_no DESC, b.order_no ASC 
+					LIMIT #{page}, 5
+		]]>
+	</select>
+
 </mapper>

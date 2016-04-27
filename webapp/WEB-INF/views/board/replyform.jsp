@@ -7,15 +7,14 @@
 <head>
 <title>mysite</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
-<link href="/mysite/assets/css/board.css" rel="stylesheet" type="text/css">
+<link href="${pageContext.request.contextPath}/assets/css/board.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 	<div id="container">
 		<c:import url="/WEB-INF/views/include/header.jsp"/>
 		<div id="content">
 			<div id="board">
-				<form class="board-form" method="post" action="/mysite/board">
-					<input type = "hidden" name = "a" value="write">
+				<form class="board-form" method="post" action="${pageContext.request.contextPath}/board/write">
 					<input type = "hidden" name = "user_no" value="${sessionScope.authUser.no }">
 					<input type = "hidden" name = "group_no" value="${requestScope.vo.group_no }">
 					<input type = "hidden" name = "order_no" value="${requestScope.vo.order_no }">
@@ -38,7 +37,7 @@
 					</table>
 					
 					<div class="bottom">
-						<a href="/mysite/board">취소</a>
+						<a href="${pageContext.request.contextPath}/board">취소</a>
 						<input type="submit" value="등록">
 					</div>
 				</form>				

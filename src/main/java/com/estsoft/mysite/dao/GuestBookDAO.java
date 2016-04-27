@@ -1,10 +1,6 @@
 package com.estsoft.mysite.dao;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,9 +29,11 @@ public class GuestBookDAO {
 //	
 //}
 	public int delete(int no, String password) {	//여러 파라미터 값을 이용할 경우엔 Map으로 묶어준다.
+		System.out.println("GuestBookDAO delete_"+no+password);
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("no",no);
-		map.put("password",password);
+		map.put("password",password);				// map에 있는 이름으로 참조하기 때문에 guestbook.xml에서 사용할 때 이 이름으로 적어줘야한다!!
 		
 		int countDeleted = sqlSession.delete("guestbook.delete2", map);
 		return countDeleted;
@@ -43,7 +41,6 @@ public class GuestBookDAO {
 	}
 
 	public GuestBookVO get(Long no) {
-		
 		GuestBookVO vo = sqlSession.selectOne("guestbook.selectByNo", no);
 		return vo;
 		
@@ -51,60 +48,22 @@ public class GuestBookDAO {
 
 	// long값 return하게..
 	public Long insert(GuestBookVO vo) {
-		
 		int count = sqlSession.insert("guestbook.insert", vo);
 		
 		System.out.println(count+":"+vo.getNo());		// primary키가 아닌 그냥 개수
-		return 0L;
+		// return 0L;
+		return vo.getNo();
 	}
 
 	public List<GuestBookVO> getList() {
-		
 		List<GuestBookVO> list = sqlSession.selectList("guestbook.selectList");	//query ID를 적어줌, 여러 xml에서 ID가 같은 경우 namespace로 구분(ex. guestbook.selectList)
 		return list;
 	}
 
 	// 오버로딩
 	public List<GuestBookVO> getList(int page) throws GuestbookGetListException{
-		
-		List<GuestBookVO> list = new ArrayList<GuestBookVO>();
-		Connection conn = null;
-		Statement stmt = null;
-		ResultSet rs = null;
-
-		try {
-			conn = dataSource.getConnection();
-			stmt = conn.createStatement();
-
-			String sql = "SELECT no,name,DATE_FORMAT(reg_date,'%Y-%m-%d %h:%i:%s'),message from guestbook "
-					+ "ORDER BY reg_date desc LIMIT " + (page - 1) * 5 + ",5";
-			rs = stmt.executeQuery(sql);
-
-			while (rs.next()) {
-				Long no = rs.getLong(1);
-				String name = rs.getString(2);
-				String reg_date = rs.getString(3);
-				String message = rs.getString(4);
-
-				GuestBookVO vo = new GuestBookVO(no, name, reg_date, message);
-				list.add(vo);
-			}
-
-		} catch (SQLException ex) {
-			throw new GuestbookGetListException();
-		} finally {
-			try {
-				if (rs != null)
-					rs.close();
-				if (stmt != null)
-					stmt.close();
-				if (conn != null)
-					conn.close();
-			} catch (SQLException ex) {
-				ex.printStackTrace();
-			}
-		}
-
+		int p = (page - 1) * 5 + 5;
+		List<GuestBookVO> list = sqlSession.selectList("guestbook.selectAjaxList", p);
 		return list;
 	}
 

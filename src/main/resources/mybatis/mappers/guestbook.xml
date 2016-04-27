@@ -12,6 +12,13 @@
 			SELECT no,name,DATE_FORMAT(reg_date,'%Y-%m-%d %h:%i:%s') as reg_date,message FROM guestbook ORDER BY reg_date desc
 		]]>
 	</select>
+	
+	<select id="selectAjaxList" resultType="guestbookvo" parameterType="long">
+		<![CDATA[
+			SELECT no,name,DATE_FORMAT(reg_date,'%Y-%m-%d %h:%i:%s') as reg_date,message FROM guestbook ORDER BY reg_date desc LIMIT #{p}
+		]]>
+	</select>
+	
 
 	<insert id="insert" parameterType="guestbookvo">
 		<![CDATA[
@@ -27,7 +34,7 @@
 	</delete>
 	
 	<delete id="delete2" parameterType="map">
-		DELETE FROM guestbook WHERE no=#{no} AND passwd = password(#{passwd})
+		DELETE FROM guestbook WHERE no=#{no} AND passwd = password(#{password })
 	</delete>
 	
 </mapper>

@@ -21,16 +21,20 @@ public class GuestBookService {
 		return guestbookDao.getList();
 	}
 	
-	public List<GuestBookVO> getList(int page) throws Exception{
+	public List<GuestBookVO> getList(int page) throws Exception{	// ajax_list
 		return guestbookDao.getList(page);
 	}
 	
-	public void add(GuestBookVO vo){
-		guestbookDao.insert(vo);
+	public Long add(GuestBookVO vo){
+		return guestbookDao.insert(vo);
 	}
 	
-	public int delete(int no, String password){
-		// return값이 0보다 크면 성공, 아니면 실패
+	public GuestBookVO get(Long no){
+		return guestbookDao.get(no);
+	}
+	
+	
+	public int delete(int no, String password){						// return값이 0보다 크면 성공, 아니면 실패
 		return guestbookDao.delete(no, password);
 	}
 }

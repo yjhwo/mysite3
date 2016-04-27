@@ -18,8 +18,16 @@ public class BoardService {
 		return boardDao.getList(page);
 	}
 	
+	public List<BoardVO> search(String kwd, int page){
+		return boardDao.search(kwd, page);
+	}
+	
 	public int getTotalCount(){
 		return boardDao.getTotalCount();
+	}
+	
+	public int getTotalCount(String kwd){
+		return boardDao.getTotalCount(kwd);
 	}
 	
 	public BoardVO get(Long no){
@@ -30,4 +38,23 @@ public class BoardService {
 		boardDao.updateCount(no);
 	}
 	
+	public void insert(BoardVO vo){
+		boardDao.insert(vo);
+	}
+	
+	public BoardVO getReplyInform(Long no){
+		return boardDao.getReplyInform(no);
+	}
+	
+	public void updateGroupOrder(BoardVO vo){
+		boardDao.updateGroupOrder(vo);
+	}
+	
+	public void modify(BoardVO vo){
+		boardDao.modify(vo);
+	}
+	
+	public int delete(int no){
+		return boardDao.delete(no);
+	}
 }

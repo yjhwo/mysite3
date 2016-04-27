@@ -16,7 +16,6 @@
 		<div id="content">
 			<div id="board">
 				<form id="search_form" action="${pageContext.request.contextPath}/board/search" method="get">
-					
 					<input type="text" id="kwd" name="kwd" value="">
 					<input type="submit" value="찾기">
 				</form>
@@ -54,7 +53,7 @@
 						<td>${vo.reg_date }</td>
 						
 						<c:if test="${sessionScope.authUser.no == vo.user_no }">
-							<td><a href="${pageContext.request.contextPath}/board?a=delete&no=${vo.no }" class="del">삭제</a></td>
+							<td><a href="${pageContext.request.contextPath}/board/delete?no=${vo.no }" class="del">삭제</a></td>
 						</c:if>
 					</tr>
 					
@@ -63,7 +62,7 @@
 				</table>
 				
 				<div class="pager">
-					<ul>
+					<ul>					
 						<c:if test="${pageMap.left == 1 }">
 							<li><a href="${pageContext.request.contextPath}/board?page=${pageMap.startPage-5 }">◀</a></li>	
 						</c:if>
@@ -86,7 +85,7 @@
 				</div>
 				<div class="bottom">
 					<c:if test="${not empty sessionScope.authUser }">
-						<a href="${pageContext.request.contextPath}/board?a=addForm&user_no=${sessionScope.authUser.no }" id="new-book">글쓰기</a>
+						<a href="${pageContext.request.contextPath}/board/addForm?user_no=${sessionScope.authUser.no }" id="new-book">글쓰기</a>
 					</c:if>
 				</div>
 								

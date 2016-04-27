@@ -5,11 +5,11 @@
 <!doctype html>
 <html>
 <head>
-<title>mysite</title>
+<title>mysite3</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
-<link href="/mysite/assets/css/guestbook.css" rel="stylesheet" type="text/css">
+<link href="${pageContext.request.contextPath}/assets/css/guestbook.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-<script type="text/javascript" src="/mysite/assets/js/jquery/jquery-1.9.0.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/jquery/jquery-1.9.0.js"></script>
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <script type="text/javascript">
 var page = 1;
@@ -64,6 +64,7 @@ var renderHtml = function(vo){
 $(function(){
 	// ajax 방명록 메세지 등록
 	$("#form-insert").submit(function(event){
+		
 		event.preventDefault();					// submit 막음
 		
 		// input&textarea 입력값가져오기
@@ -74,13 +75,13 @@ $(function(){
 		
 		// 폼 리셋하기 (안해도 잘 됨..?)
 		// reset()은 FORMHTMLElement 객체에 있는 함수!
-		//this.reset();
+		this.reset();
 		
 		$.ajax({
-			url:"${pageContext.request.contextPath}/guestbook",
+			url:"${pageContext.request.contextPath}/guestbook/ajax-insert",
 			type:"post",
 			dataType:"json",
-			data:"/ajax-insert?name="+name+"&passwd="+passwd+"&message="+message,	// 데이터스트링만들고
+			data:"name="+name+"&passwd="+passwd+"&message="+message,	// 데이터스트링만들고
 			success:function(response){
 				/* response = {
 					result:"success",
@@ -129,6 +130,7 @@ $(function(){
 		$("#del-no").val(no);
 		
 		//$("#dialogMessage").dialog();
+		$(".validateTips").text( "메세지의 비밀번호를 입력해주세요." );
 		dialogDelete.dialog("open");
 	});
 	
@@ -143,16 +145,20 @@ $(function(){
 				var no = $("#del-no").val();
 				var password = $("#del-password").val();
 				console.log("clicked:"+no+":"+password);
+				dialogDelete.dialog("close");
+				
 				
 				// no랑 password 넘기기!!
-				
 				$.ajax({
-					url:"/mysite/guestbook",
-					type:"get",
+					url:"${pageContext.request.contextPath}/guestbook/ajax-delete",
+					type:"post",		// get으로 했었음
 					dataType:"json",
-					data:"/ajax-delete?no="+no+"&passwd="+password,
+					data:"no="+no+"&passwd="+password,
 					success:function(response){
+						console.log(response.result);
 						if(response.result != "success"){
+							$(".validateTips").text( "비밀번호가 틀렸습니다.^^" );
+							dialogDelete.dialog("open");
 							return;
 						}
 						dialogDelete.dialog("close");
@@ -170,12 +176,12 @@ $(function(){
 				
 			},
 			"취소":function(){
+				$("#del-password").val("");
 				dialogDelete.dialog("close");
 			}
 		},
 		close: function(){
-			//form[0].reset();
-			//allFields.removeClass("ui-state-error");
+			$("#dialog-form form").get(0).reset();
 		}
 	});
 	

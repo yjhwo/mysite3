@@ -8,13 +8,16 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.estsoft.db.MySQLWebDBConnection;
+import com.estsoft.mysite.dao.BoardDAO;
 import com.estsoft.mysite.service.BoardService;
 import com.estsoft.mysite.vo.BoardVO;
-
 @Controller
 @RequestMapping("/board")
 public class BoardController {
@@ -25,22 +28,20 @@ public class BoardController {
 	private BoardService boardService;
 
 	@RequestMapping("")
-	public ModelAndView list(@RequestParam(value = "p", required = true, defaultValue = "1") int page,
+	public ModelAndView list(@RequestParam(value = "page", required = true, defaultValue = "1") int page,
 							@RequestParam(value = "kwd", required = true, defaultValue = "") String kwd) {
 
 		List<BoardVO> list = boardService.getList(page);
 		System.out.println("board_page:" + page);
-
+		
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("list", list);
-		mav.setViewName("/board/list");
 
 		// ---------------
 		int left = 1, right = 1;
 		int startPage, lastPage;
 
 		int count = boardService.getTotalCount();
-
 		int maxPage = count / COUNTPAGE;
 
 		if (count % COUNTPAGE != 0)
@@ -68,7 +69,7 @@ public class BoardController {
 
 		if (lastPage > maxPage)
 			lastPage = maxPage;
-
+		
 		// ---------------
 		Map<String, Integer> map = new HashMap<String, Integer>();
 		map.put("left", left);
@@ -80,11 +81,71 @@ public class BoardController {
 
 		//	--------------???
 		mav.addObject("pageMap", map);
+		mav.setViewName("/board/list");
 		
 		return mav;
 	}
 	
+	// ---- keyword 검색 (list와 중복된 부분이 있는데, 귀찮아서 그냥 따로 만들었음..)
+	@RequestMapping("/search")
+	public ModelAndView search(@RequestParam(value="kwd",required=true,defaultValue="")String kwd,
+						@RequestParam(value = "page", required = true, defaultValue = "1")int page){
+		
+		System.out.println("search_kwd:"+kwd+" page:"+page);
+		List<BoardVO> list = boardService.search(kwd, page);		// 검색된 결과 리턴
+		
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("list", list);
+		
+		// ------
+		int left = 1, right = 1;
+		int startPage, lastPage;
+		int count = boardService.getTotalCount(kwd);
+		int maxPage = count/COUNTPAGE;
+		
+		if(count % COUNTPAGE != 0)
+			maxPage++;
+		
+		if(page <1 || page > maxPage)
+			page = 1;
+		
+		int maxPageGroup = maxPage/COUNTLIST;
+		if(maxPage % COUNTLIST != 0)
+			maxPageGroup++;
+		
+		int selectedPageGroup = page/COUNTLIST;
+		if(page % COUNTLIST != 0)
+			selectedPageGroup++;
+		
+		if(selectedPageGroup == 1)
+			left = 0;
+		
+		if(selectedPageGroup == maxPageGroup)
+			right = 0;
+		
+		startPage = (selectedPageGroup-1)*COUNTLIST+1;
+		lastPage = (selectedPageGroup)*COUNTLIST;
+		
+		if(lastPage > maxPage)
+			lastPage = maxPage;
+		
+		// ----------
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		map.put("left", left);
+		map.put("right", right);
+		map.put("startPage", startPage);
+		map.put("lastPage", lastPage);
+		map.put("page", page);
+		map.put("total", count);
+		
+		//		--------------???
+		mav.addObject("pageMap", map);
+		mav.setViewName("/board/list");
+				
+		return mav;
+	}
 	
+	// ---- 게시물 보여주기
 	@RequestMapping("/view")
 	public ModelAndView view(@RequestParam(value="no",required=true,defaultValue="")Long no,
 						@RequestParam(value="user_no",required=true,defaultValue="")Long user_no,
@@ -107,17 +168,78 @@ public class BoardController {
 		return mav;
 	}
 	
-	@RequestMapping("/modifyForm")
-	public String modifyForm(@RequestParam(value="no",required=true,defaultValue="")Long no){
-		System.out.println("modifyForm_no:"+no);
-		return "redirect:/board/modify";
+	//---- 글쓰기
+	@RequestMapping("/addForm")
+	public ModelAndView addForm(@RequestParam(value="user_no",required=true,defaultValue="")Long user_no){	// no값 받고 write.jsp로 값 넘겨줌		
+		
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("user_no", user_no);
+		mav.setViewName("/board/write");
+																			
+		return mav;
 	}
 	
-/*	@RequestMapping("/modify")
-	public String modify(//VO로 받기){
-		System.out.println("modify_no:"+no);
+	@RequestMapping("/write")
+	public String write(@ModelAttribute BoardVO vo){												// user_no, title, content 넘겨받음
+																									// group_no, order_no, depth도 검토!
 		
-		return "";
-	}*/
+		if (vo.getGroup_no() != null) {
+			vo.setGroup_no(vo.getGroup_no()); 		// 3
+			vo.setOrder_no(vo.getOrder_no() + 1); 	// 2 
+			vo.setDepth(vo.getDepth() + 1); 		// 1
 
+			boardService.updateGroupOrder(vo);		// order_no 증가시키는 메소드(insert하기 전에 같은 그룹내의 order_no보다 큰 order_no는 다 +1
+		}
+		
+		boardService.insert(vo);
+		return "redirect:/board";
+	}
+	//----
+	
+	//---- 답글
+	@RequestMapping("/reply")
+	public ModelAndView reply(@RequestParam(value="no",required=true,defaultValue="")Long no){			// no 넘겨받음
+		
+		System.out.println("reply no:"+no);
+		
+		BoardVO vo = boardService.getReplyInform(no);		
+		//  group_no, order_no, depth값 넘어옴
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("vo", vo);
+		mav.setViewName("/board/replyform");
+		
+		return mav;
+	}	
+	
+	// ---- 수정
+	@RequestMapping("/modifyForm")
+	public ModelAndView modifyForm(@RequestParam(value="no",required=true,defaultValue="")Long no){
+		
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("no", no);
+		mav.setViewName("/board/modify");
+		return mav;
+	}
+	
+	@RequestMapping("/modify")
+	public String modify(@ModelAttribute BoardVO vo){	// no(게시물 번호), title, content 받음
+	
+		boardService.modify(vo);
+		return "redirect:/board";
+	}
+	
+	// ---- 삭제
+	@RequestMapping("/delete")
+	public String delete(@RequestParam(value="no",required=true,defaultValue="")int no){		// 게시글 번호
+		
+		System.out.println("delete_no:"+no);
+		int chk = boardService.delete(no);
+		
+		if(chk<1){
+			System.out.println("삭제에 실패하였습니다.");
+		}
+		
+		return "redirect:/board";
+	}
+	
 }
