@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+	<appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<charset>UTF-8</charset>
+			<Pattern>
+				%d{HH:mm:ss.SSS} [%thread] %-5level %logger{5} - %msg%n
+			</Pattern>
+		</encoder>
+	</appender>
+
+	<appender name="fileAppender2" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>c:\LogExample\logexample2.log</file>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<Pattern>
+				%d{HH:mm:ss.SSS} [%thread] %-5level %logger{5} - %msg%n
+			</Pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<FileNamePattern>C:\LogExample\logexample2.%i.log.zip</FileNamePattern>
+			<MinIndex>1</MinIndex>
+			<MaxIndex>10</MaxIndex>
+		</rollingPolicy>
+		<triggeringPolicy
+			class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<MaxFileSize>1MB</MaxFileSize>
+		</triggeringPolicy>
+	</appender>
+	
+	<appender name="fileAppender3" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>c:\LogExample\logexample3.log</file>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<Pattern>
+				%d{HH:mm:ss.SSS} [%thread] %-5level %logger{5} - %msg%n
+			</Pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<FileNamePattern>C:\LogExample\logexample3.%i.log.zip</FileNamePattern>
+			<MinIndex>1</MinIndex>
+			<MaxIndex>10</MaxIndex>
+		</rollingPolicy>
+		<triggeringPolicy
+			class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<MaxFileSize>1MB</MaxFileSize>
+		</triggeringPolicy>
+	</appender>	
+
+
+	<!-- DEBUG > INFO > WARN > ERROR 순서 -->
+
+	<!--
+		com.bit2015.logexample2 아래 패키지 로그들만 
+		C:\LogExample\logexample2.log 파일에 출력하는 로거
+	-->
+	<logger name="com.bit2015.logexample2"  level="INFO" additivity="false">
+            <appender-ref ref="fileAppender2" />
+    </logger>
+    
+	<!--
+		com.bit2015.logexample3 아래 패키지 로그들만 
+		C:\LogExample\logexample3.log 파일에 출력하는 로거
+	-->
+	<logger name="com.bit2015.logexample3"  level="WARN" additivity="false">
+            <appender-ref ref="fileAppender3" />
+			<appender-ref ref="consoleAppender" />
+    </logger>    
+	
+	<!-- 루트(글로벌) 로거 -->
+	<root level="DEBUG">
+		<appender-ref ref="consoleAppender" />
+	</root>
+	<!--
+	<root level="INFO">
+		<appender-ref ref="consoleAppender" />
+		<appender-ref ref="fileAppender" />
+	</root>
+	-->
+	<!--
+		<root level="WARN">
+			<appender-ref ref="consoleAppender" />
+		</root>
+	-->
+	<!--
+		<root level="ERROR">
+			<appender-ref ref="consoleAppender" />
+		</root>
+	-->
+</configuration>

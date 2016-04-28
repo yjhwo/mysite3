@@ -48,9 +48,9 @@ public class UserController {
 	}
 
 	/*
-	 *	HttpSession기술이 코드 안에 들어와있는 부분이 별로 --> 나중에 수정할 예정
+	 *	HttpSession기술이 코드 안에 들어와있는 부분이 별로 --> ※ AuthLoginInterceptor ※
 	 */
-	
+/*	
 	@RequestMapping("/login")
 	public String login(@ModelAttribute UserVO vo,HttpSession session){
 		// 로그인 처리
@@ -63,9 +63,9 @@ public class UserController {
 		// 로그인 성공
 		session.setAttribute("authUser", userVo);
 		return "redirect:/main";
-	}
+	}*/
 	
-	@RequestMapping("/logout")
+/*	@RequestMapping("/logout")
 	public String logout(HttpSession session){		// 로그아웃 처리
 		// session이 절대 null이 될 경우는 없다. --> dispatcher-servlet이 처리해서 보내줌
 		
@@ -77,7 +77,7 @@ public class UserController {
 		}
 		
 		return "redirect:/main";
-	}
+	}*/
 	
 	@RequestMapping("/checkemail")
 	@ResponseBody
