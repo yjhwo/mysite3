@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.estsoft.mysite.annotation.Auth;
+import com.estsoft.mysite.annotation.AuthUser;
 import com.estsoft.mysite.service.BoardService;
 import com.estsoft.mysite.vo.BoardVO;
 import com.estsoft.mysite.vo.UserVO;
@@ -181,16 +182,16 @@ public class BoardController {
 	
 	@Auth
 	@RequestMapping("/write")
-	//public String write(@AuthUser userVO authUser,@ModelAttribute BoardVO vo){
-	public String write(HttpSession session,@ModelAttribute BoardVO vo){												// user_no, title, content 넘겨받음
+	public String write(@AuthUser UserVO authUser,@ModelAttribute BoardVO vo){
+	//public String write(HttpSession session,@ModelAttribute BoardVO vo){												// user_no, title, content 넘겨받음
 																									// group_no, order_no, depth도 검토!
 		// 로그인 사용자 체크
-		UserVO authUser = (UserVO)session.getAttribute("authUser");
-
-		if(authUser == null){
-			return "redirect:/user/loginform";
-		}
-		// -----
+//		UserVO authUser = (UserVO)session.getAttribute("authUser");
+//
+//		if(authUser == null){
+//			return "redirect:/user/loginform";
+//		}
+		System.out.println(authUser);
 		
 		if (vo.getGroup_no() != null) {
 			vo.setGroup_no(vo.getGroup_no()); 		// 3

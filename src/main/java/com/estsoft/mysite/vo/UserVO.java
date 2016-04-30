@@ -1,9 +1,18 @@
 package com.estsoft.mysite.vo;
 
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
+
 public class UserVO {
 	private Long no;
-	private String name;
+	
+	@NotEmpty
+	private String name;	// name은 값이 있어야 한다는 뜻
+	
+	@NotEmpty
+	@Email
 	private String email;
+	
 	private String password;
 	private String gender;
 	

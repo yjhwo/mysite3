@@ -31,6 +31,13 @@
 				</property>
 			</bean>
 		</mvc:message-converters>
+
+		<!-- argument resolver -->
+		<mvc:argument-resolvers>
+			<bean
+				class="com.estsoft.mysite.resolver.AuthUserHandlerMethodArgumentResolver" />
+		</mvc:argument-resolvers>
+
 	</mvc:annotation-driven>
 
 	<!-- 서블릿 컨테이너의 디폴트 서블릿 위임 핸들러 -->
@@ -51,34 +58,44 @@
 
 	<!-- Interceptors -->
 	<mvc:interceptors>
-		
+
 		<mvc:interceptor>
 			<mvc:mapping path="/board/**" />
 			<bean class="com.estsoft.mysite.interceptor.MyInterceptor" />
 		</mvc:interceptor>
-		
+
 		<mvc:interceptor>
 			<mvc:mapping path="/guestbook/**" />
 			<bean class="com.estsoft.mysite.interceptor.MyInterceptor2" />
 		</mvc:interceptor>
-		
+
 		<mvc:interceptor>
 			<mvc:mapping path="/user/login" />
 			<bean class="com.estsoft.mysite.interceptor.AuthLoginInterceptor" />
 		</mvc:interceptor>
-		
+
 		<mvc:interceptor>
 			<mvc:mapping path="/user/logout" />
 			<bean class="com.estsoft.mysite.interceptor.AuthLogoutInterceptor" />
 		</mvc:interceptor>
-		
+
 		<mvc:interceptor>
 			<mvc:mapping path="/**" />
-			<mvc:exclude-mapping path="/assets/**"/>
+			<mvc:exclude-mapping path="/assets/**" />
 			<bean class="com.estsoft.mysite.interceptor.AuthInterceptor" />
 		</mvc:interceptor>
-		
+
 	</mvc:interceptors>
+
+	<!-- 6. MessageSource -->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>messages/messages_ko</value>
+			</list>
+		</property>
+	</bean>
 
 
 </beans>
