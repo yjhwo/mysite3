@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StopWatch;
 
 import com.estsoft.mysite.exception.GuestbookGetListException;
 import com.estsoft.mysite.vo.GuestBookVO;
@@ -58,7 +59,7 @@ public class GuestBookDAO {
 		return vo.getNo();
 	}
 
-	public List<GuestBookVO> getList() {
+	public List<GuestBookVO> getList() {		
 		List<GuestBookVO> list = sqlSession.selectList("guestbook.selectList");	//query ID를 적어줌, 여러 xml에서 ID가 같은 경우 namespace로 구분(ex. guestbook.selectList)
 		return list;
 	}
@@ -67,6 +68,7 @@ public class GuestBookDAO {
 	public List<GuestBookVO> getList(int page) throws GuestbookGetListException{
 		int p = (page - 1) * 5 + 5;
 		List<GuestBookVO> list = sqlSession.selectList("guestbook.selectAjaxList", p);
+		
 		return list;
 	}
 

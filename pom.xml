@@ -116,6 +116,13 @@
 			<version>4.2.0.Final</version>
 		</dependency>
 
+		<!-- spring aspect -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aspects</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+		
 
 	</dependencies>
 

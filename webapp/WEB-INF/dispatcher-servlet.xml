@@ -8,6 +8,9 @@
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"
 	xmlns:mvc="http://www.springframework.org/schema/mvc">
 
+	<!--  AOP Auto Proxy -->
+	<aop:aspectj-autoproxy/>
+
 	<!-- 2. validator, conversionService, messageConverter를 자동으로 등록 -->
 	<mvc:annotation-driven>
 		<mvc:message-converters>
