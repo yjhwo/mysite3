@@ -77,7 +77,8 @@ public class UserController {
 	 */
 	/*
 	 * @RequestMapping("/login") public String login(@ModelAttribute UserVO
-	 * vo,HttpSession session){ // 로그인 처리 UserVO userVo = userService.login(vo);
+	 * vo,HttpSession session){ // 로그인 처리 
+	 * UserVO userVo = userService.login(vo);
 	 * 
 	 * if(userVo == null){ // 로그인 실패 return "/user/loginform_fail"; } // 로그인 성공
 	 * session.setAttribute("authUser", userVo); return "redirect:/main"; }
@@ -96,8 +97,7 @@ public class UserController {
 
 	@RequestMapping("/checkemail")
 	@ResponseBody
-	public Map<String, Object> checkEmail(
-			@RequestParam(value = "email", required = true, defaultValue = "") String email) {
+	public Map<String, Object> checkEmail(@RequestParam(value = "email", required = true, defaultValue = "") String email) {
 		// |-> Object로 써도 상관 없음. email이라는 parameter값을 받음
 
 		// mysite의 CheckEmailAction과 비교해서 봐보기!

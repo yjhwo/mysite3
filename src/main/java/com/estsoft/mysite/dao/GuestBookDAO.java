@@ -56,6 +56,10 @@ public class GuestBookDAO {
 		}
 		System.out.println(count+":"+vo.getNo());		// primary키가 아닌 그냥 개수
 		
+		/*
+		 * 파라미터로 넘어온 DTO(혹은 VO)객체에 auto_increment 값을 구해서 저장해야 하는 property를 지정해주면
+		 * 쿼리가 수행된 후 파라미터로 넘어온 DTO객체에 값이 저장되게 됩니다.
+		 */
 		return vo.getNo();
 	}
 

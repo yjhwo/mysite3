@@ -35,7 +35,7 @@ public class AuthUserHandlerMethodArgumentResolver implements HandlerMethodArgum
 	}
 	
 	@Override
-	public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest,
+	public Object resolveArgument( MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest,
 			WebDataBinderFactory binderFactory) throws Exception {
 		
 		if( this.supportsParameter(parameter)==false ){
