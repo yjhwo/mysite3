@@ -9,8 +9,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import com.estsoft.mysite.domain.User;
 import com.estsoft.mysite.service.UserService;
-import com.estsoft.mysite.vo.UserVO;
 
 public class AuthLoginInterceptor extends HandlerInterceptorAdapter {
 
@@ -24,10 +24,11 @@ public class AuthLoginInterceptor extends HandlerInterceptorAdapter {
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
 		
-		UserVO userVo = new UserVO(email, password);
+		User user = new User(email, password);
 		
 		// login 서비스 호출(로그인 작업)
-		UserVO authUser = userService.login(userVo);
+		User authUser = userService.login(user);
+		System.out.println("AuthLoginInterceptor_authUser:"+authUser);
 		
 		if(authUser == null){
 			response.sendRedirect(request.getContextPath()+"/user/loginform");

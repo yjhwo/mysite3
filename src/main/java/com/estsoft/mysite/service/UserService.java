@@ -1,35 +1,37 @@
 package com.estsoft.mysite.service;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.estsoft.mysite.dao.UserDAO;
-import com.estsoft.mysite.vo.UserVO;
+import com.estsoft.mysite.domain.User;
+import com.estsoft.mysite.repository.UserRepository;
 
-// 달아줘야 root-application-context에 생성됨
 @Service
+@Transactional
 public class UserService {
 	
 	@Autowired
-	private UserDAO userDao;
+	private UserRepository userRepository;
 	
 	//@Autowired
 	//private MailSender mailSender;
 	
-	public void join(UserVO vo){
-		userDao.insert(vo);
+	public void join(User user){
+		userRepository.insert(user);
 		// 메일보내기
 		// ..
 	}
 	
-	public UserVO login(UserVO vo){
-		UserVO authUser = userDao.get(vo);
+	public User login(User user){
+		User authUser = userRepository.get(user);
 		return authUser;
 	}
 	
-	public UserVO getUser(String email){
-		UserVO vo = userDao.get(email);
-		return vo;
+	public User getUser(String email){
+		User user = userRepository.get(email);
+		return user;
 	}
 	
 	

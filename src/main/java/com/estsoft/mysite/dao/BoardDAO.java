@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.sql.DataSource;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,9 @@ import com.estsoft.mysite.vo.BoardVO;
 @Repository
 public class BoardDAO {
 
+	@Autowired
+	private DataSource dataSource;	
+	
 	@Autowired
 	private SqlSession sqlSession;
 	

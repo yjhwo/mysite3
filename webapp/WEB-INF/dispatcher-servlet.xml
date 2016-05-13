@@ -14,7 +14,6 @@
 	<!-- 2. validator, conversionService, messageConverter를 자동으로 등록 -->
 	<mvc:annotation-driven>
 		<mvc:message-converters>
-
 			<!-- String을 HttpMessage로 Convert -->
 			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
 				<property name="supportedMediaTypes">
@@ -46,8 +45,9 @@
 	<!-- 서블릿 컨테이너의 디폴트 서블릿 위임 핸들러 -->
 	<mvc:default-servlet-handler />
 
+	<!-- @Controller 스캔 -->
 	<context:annotation-config />
-	<context:component-scan base-package="com.estsoft.mysite" />
+	<context:component-scan base-package="com.estsoft.mysite.controller" />
 
 	<!-- 3. 기본 뷰 리졸버 -->
 	<bean id="viewResolver"

@@ -11,14 +11,14 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>mysite</title>
+<title>mysite4</title>
 </head>
 <body>
 	<div id="container">
 		<c:import url="/WEB-INF/views/include/header.jsp"/>
 		<div id="content">
 			<h1>비밀번호가 일치하지 않습니다.</h1>
-			<a href="/mysite/gb?a=deleteform&no=<%=no%>">비밀번호 다시 입력하기</a>
+			<a href="${pageContext.request.contextPath}/gb?a=deleteform&no=<%=no%>">비밀번호 다시 입력하기</a>
 		</div>
 		<c:import url="/WEB-INF/views/include/navigation.jsp"/>
 		<c:import url="/WEB-INF/views/include/footer.jsp"/>

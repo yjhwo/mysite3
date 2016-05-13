@@ -13,7 +13,7 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/jquery/jquery-1.9.0.js"></script>
 <script type="text/javascript">
 	$(function() {
-		$("#join-form2").submit(function() {
+		$("#join-form").submit(function() {
 			// 1. 이름 유효성 체크(validation)
 			if ($("#name").val() == "") {
 				alert("이름은 필수 요소입니다.");
@@ -141,9 +141,9 @@
 
 					<fieldset>
 						<legend>성별</legend>
-						<label>여</label> <input type="radio" name="gender" value="F"
+						<label>여</label> <input type="radio" name="gender" value="FEMAIL"
 							checked="checked"> <label>남</label> <input type="radio"
-							name="gender" value="M">
+							name="gender" value="FEMAIL">
 					</fieldset>
 
 					<fieldset>

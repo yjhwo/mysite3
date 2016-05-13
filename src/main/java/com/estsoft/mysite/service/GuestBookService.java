@@ -2,39 +2,35 @@ package com.estsoft.mysite.service;
 
 import java.util.List;
 
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
-import com.estsoft.mysite.dao.GuestBookDAO;
-import com.estsoft.mysite.exception.GuestbookGetListException;
-import com.estsoft.mysite.vo.GuestBookVO;
-import com.estsoft.mysite.vo.UserVO;
+import com.estsoft.mysite.domain.GuestBook;
+import com.estsoft.mysite.repository.GuestBookRepository;
 
 @Service
+@Transactional
 public class GuestBookService {
 
 	@Autowired
-	private GuestBookDAO guestbookDao;
+	private GuestBookRepository guestbookRepository;
 	
-	public List<GuestBookVO> getList(){
-		return guestbookDao.getList();
+	public List<GuestBook> getList(){
+		return guestbookRepository.findAll();
 	}
+
+	public void add(GuestBook vo){
+		guestbookRepository.insert(vo);
+	}	
 	
-	public List<GuestBookVO> getList(int page) throws Exception{	// ajax_list
-		return guestbookDao.getList(page);
-	}
-	
-	public Long add(GuestBookVO vo){
-		return guestbookDao.insert(vo);
-	}
-	
-	public GuestBookVO get(Long no){
-		return guestbookDao.get(no);
-	}
-	
-	
-	public int delete(int no, String password){						// return값이 0보다 크면 성공, 아니면 실패
-		return guestbookDao.delete(no, password);
+	public Boolean delete(int no, String password){	
+		GuestBook guestbook = new GuestBook();
+		guestbook.setNo((long) no);
+		guestbook.setPasswd(password);
+		
+		return guestbookRepository.remove(guestbook);
 	}
 }

@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>mysite3</title>
+<title>mysite4</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <link href="${pageContext.request.contextPath}/assets/css/board.css" rel="stylesheet" type="text/css">
 </head>

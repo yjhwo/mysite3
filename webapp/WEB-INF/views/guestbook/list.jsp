@@ -19,7 +19,7 @@
 					<table>
 						<tr>
 							<td>이름</td><td><input type="text" name="name"></td>
-							<td>비밀번호</td><td><input type="passwd" name="passwd"></td>
+							<td>비밀번호</td><td><input type="password" name="passwd"></td>
 						</tr>
 						<tr>
 							<td colspan=4><textarea name="message" id="message"></textarea></td>
@@ -38,7 +38,7 @@
 						<table>
 			
 							<tr>
-								<td>[${count-status.index }]</td>
+								<td>[${status.index+1 }]</td>
 								<td>${vo.name }</td>
 								<td>${vo.reg_date }</td>
 								<td><a href="${pageContext.request.contextPath}/guestbook/deleteform?no=${vo.no }">삭제</a></td>
